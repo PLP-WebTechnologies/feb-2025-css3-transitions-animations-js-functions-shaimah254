@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPath Pro | Interactive Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode {
+            --primary: #4895ef;
+            --secondary: #4361ee;
+            --dark: #f8f9fa;
+            --light: #1a1a2e;
+            --card-bg: #16213e;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Animated Header */
+        .animated-header {
+            text-align: center;
+            margin-bottom: 60px;
+            overflow: hidden;
+        }
+
+        .animated-header h1 {
+            font-size: 3rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: slideIn 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Interactive Card */
+        .interactive-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Animated Button */
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .action-btn:active {
+            transform: translateY(1px);
+        }
+
+        .action-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+
+        .action-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        /* Progress Animation */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--success);
+            transition: width 1s ease-in-out;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                            rgba(255,255,255,0) 0%, 
+                            rgba(255,255,255,0.8) 50%, 
+                            rgba(255,255,255,0) 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Theme Switch Animation */
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Floating Animation */
+        .floating-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            animation: float 3s ease-in-out infinite;
+            margin: 30px auto;
+            display: block;
+            text-align: center;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* User Preferences Panel */
+        .preferences-panel {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: var(--shadow);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .preferences-panel.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .preference-item {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .animated-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="animated-header">
+            <h1>Interactive DevPath Pro</h1>
+            <p>Experience CSS3 animations and advanced JavaScript</p>
+        </div>
+
+        <div class="interactive-card">
+            <i class="fas fa-code floating-icon"></i>
+            
+            <h2>Progress Tracker</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <button class="action-btn" id="animate-btn">
+                <i class="fas fa-play"></i> Animate Progress
+            </button>
+            
+            <div class="theme-switch">
+                <span>Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <button class="action-btn" id="preferences-btn">
+                <i class="fas fa-cog"></i> Show Preferences
+            </button>
+        </div>
+        
+        <div class="preferences-panel" id="preferences-panel">
+            <h3>Your Preferences</h3>
+            <div class="preference-item">
+                <span>Animation Speed</span>
+                <select id="animation-speed">
+                    <option value="slow">Slow</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="fast">Fast</option>
+                </select>
+            </div>
+            <div class="preference-item">
+                <span>Preferred Theme</span>
+                <select id="preferred-theme">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="system">System Default</option>
+                </select>
+            </div>
+            <button class="action-btn" id="save-prefs">
+                <i class="fas fa-save"></i> Save Preferences
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const animateBtn = document.getElementById('animate-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const preferencesBtn = document.getElementById('preferences-btn');
+        const preferencesPanel = document.getElementById('preferences-panel');
+        const animationSpeedSelect = document.getElementById('animation-speed');
+        const preferredThemeSelect = document.getElementById('preferred-theme');
+        const savePrefsBtn = document.getElementById('save-prefs');
+
+        // Load saved preferences
+        function loadPreferences() {
+            const preferences = JSON.parse(localStorage.getItem('devPathPreferences')) || {
+                darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+                animationSpeed: 'normal',
+                preferredTheme: 'system'
+            };
+            
+            // Apply preferences
+            themeToggle.checked = preferences.darkMode;
+            toggleDarkMode(preferences.darkMode);
+            
+            animationSpeedSelect.value = preferences.animationSpeed;
+            preferredThemeSelect.value = preferences.preferredTheme;
+            
+            console.log('Preferences loaded:', preferences);
+        }
+
+        // Save preferences
+        function savePreferences() {
+            const preferences = {
+                darkMode: themeToggle.checked,
+                animationSpeed: animationSpeedSelect.value,
+                preferredTheme: preferredThemeSelect.value
+            };
+            
+            localStorage.setItem('devPathPreferences', JSON.stringify(preferences));
+            console.log('Preferences saved:', preferences);
+            
+            // Show confirmation animation
+            const confirmation = document.createElement('div');
+            confirmation.textContent = 'Preferences saved!';
+            confirmation.style.position = 'fixed';
+            confirmation.style.bottom = '20px';
+            confirmation.style.right = '20px';
+            confirmation.style.background = 'var(--success)';
+            confirmation.style.color = 'white';
+            confirmation.style.padding = '15px 25px';
+            confirmation.style.borderRadius = '8px';
+            confirmation.style.boxShadow = 'var(--shadow)';
+            confirmation.style.zIndex = '1000';
+            confirmation.style.transform = 'translateY(100px)';
+            confirmation.style.opacity = '0';
+            confirmation.style.transition = 'all 0.3s ease';
+            
+            document.body.appendChild(confirmation);
+            
+            setTimeout(() => {
+                confirmation.style.transform = 'translateY(0)';
+                confirmation.style.opacity = '1';
+            }, 100);
+            
+            setTimeout(() => {
+                confirmation.style.transform = 'translateY(100px)';
+                confirmation.style.opacity = '0';
+                setTimeout(() => confirmation.remove(), 300);
+            }, 3000);
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode(enable) {
+            if (enable) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        // Animate progress bar
+        function animateProgress() {
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.width = '85%';
+            }, 100);
+            
+            // Add particle effect
+            for (let i = 0; i < 10; i++) {
+                createParticle(animateBtn);
+            }
+        }
+
+        // Create particle effect
+        function createParticle(element) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = '8px';
+            particle.style.height = '8px';
+            particle.style.background = 'var(--accent)';
+            particle.style.borderRadius = '50%';
+            particle.style.pointerEvents = 'none';
+            
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.transform = 'translate(-50%, -50%)';
+            
+            document.body.appendChild(particle);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 2 + Math.random() * 3;
+            const lifetime = 800 + Math.random() * 500;
+            
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+            
+            let opacity = 1;
+            const fadeInterval = setInterval(() => {
+                opacity -= 0.02;
+                particle.style.opacity = opacity;
+                
+                if (opacity <= 0) {
+                    clearInterval(fadeInterval);
+                    particle.remove();
+                }
+            }, 30);
+            
+            const moveInterval = setInterval(() => {
+                x += vx;
+                y += vy;
+                vy += 0.1; // gravity
+                
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                
+                lifetime -= 16;
+                if (lifetime <= 0) {
+                    clearInterval(moveInterval);
+                }
+            }, 16);
+        }
+
+        // Event Listeners
+        themeToggle.addEventListener('change', () => {
+            toggleDarkMode(themeToggle.checked);
+        });
+
+        animateBtn.addEventListener('click', animateProgress);
+
+        preferencesBtn.addEventListener('click', () => {
+            preferencesPanel.classList.toggle('show');
+        });
+
+        savePrefsBtn.addEventListener('click', savePreferences);
+
+        // Initialize
+        loadPreferences();
+        
+        // Trigger header animation after load
+        setTimeout(() => {
+            document.querySelector('.animated-header h1').style.opacity = '1';
+        }, 300);
+    </script>
+</body>
+</html>
